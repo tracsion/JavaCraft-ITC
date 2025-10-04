@@ -22,9 +22,8 @@ public class ChatClient {
             username = "player";
         }
 
-        System.out.print("Enter shared key (default = SECRETKEY): ");
-        String keyInput = in.nextLine("").trim();
-        String key = keyInput.isEmpty() ? ChatConfig.KEY : keyInput;
+        final String key = ChatConfig.KEY;
+        System.out.print("The encryption key for this session is: " + key);  // why not add useless shit like this gang?
 
         System.out.println("\n✅ Connected as @" + username);
         System.out.println("📝 Message format: @" + username + ": your message");
@@ -103,7 +102,6 @@ public class ChatClient {
             System.out.println("Could not connect to server: " + e.getMessage());
             System.out.println("Check your internet or server details in ChatConfig.");
         } catch (Throwable t) {
-            System.out.println("Unexpected error: " + t.getMessage());
             System.err.println("Unexpected error: " + t.getMessage());
         }
     }
