@@ -8,6 +8,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.IOException;
 
+// had to re-code the chatconfig and add a message validator which as I said is the DFA validation like asked in lab 4 i think.
+// but yeah guys feel free to talk to me about any changes.
+
 public class ChatClient {
 
     public void start(InputReader in) {
@@ -37,7 +40,7 @@ public class ChatClient {
             int validIn = 0, validOut = 0, invalidIn = 0, invalidOut = 0;
 
             while (true) {
-                // 1 Pings the fucking server
+                // 1 Pings the fucking server because we gotta be sure that everything works!
                 output.println("");
 
                 // 2) Read all server responses until '+'
@@ -97,10 +100,10 @@ public class ChatClient {
             }
 
         } catch (IOException e) {
-            System.out.println("❌ Could not connect to server: " + e.getMessage());
+            System.out.println("Could not connect to server: " + e.getMessage());
             System.out.println("Check your internet or server details in ChatConfig.");
         } catch (Throwable t) {
-            System.out.println("⚠️ Unexpected error: " + t.getMessage());
+            System.out.println("Unexpected error: " + t.getMessage());
             System.err.println("Unexpected error: " + t.getMessage());
         }
     }
