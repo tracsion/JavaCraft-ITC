@@ -35,7 +35,7 @@ public class GameState implements Serializable {
     public boolean inSecretArea() { return inSecret; }
     public boolean isExitRequested() { return exit; }
 
-    // world replacement (secret area or load)
+    // secret area or loading (gucci flip flops)
     public void setWorld(World w) {
         this.world = w;
         player.clamp(world);

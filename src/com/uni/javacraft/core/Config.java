@@ -7,6 +7,6 @@ public final class Config {
     public static final int DEFAULT_W = 25;
     public static final int DEFAULT_H = 15;
 
-    // Inventory size for secret area
+    // Inventory size for secret area lets get 300000000 rahhhhhh
     public static final int INVENTORY_SIZE = 100;
 }

@@ -8,14 +8,14 @@ public class InputReader {
     public boolean confirm(String prompt) {
         System.out.print(prompt);
         String s = sc.next().trim().toUpperCase();
-        sc.nextLine(); // consume rest of line
+        sc.nextLine(); // consume the rest of my heart
         return s.equals("Y");
     }
 
     public String nextToken(String prompt) {
         System.out.print(prompt);
         String t = sc.next();
-        sc.nextLine(); // consume rest of line
+        sc.nextLine(); // consume the rest of my broken heart
         return t;
     }
 
@@ -26,7 +26,7 @@ public class InputReader {
     public int nextInt(String prompt) {
         System.out.print(prompt);
         int v = sc.nextInt();
-        sc.nextLine(); // consume newline
+        sc.nextLine(); // consume my heart
         return v;
     }
 

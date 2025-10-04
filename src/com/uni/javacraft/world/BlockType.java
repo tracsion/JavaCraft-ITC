@@ -1,5 +1,7 @@
 package com.uni.javacraft.world;
 
+// premium minecraft copy ngl lawsuit incoming
+
 public enum BlockType {
     AIR(0, "Empty Block"),
     WOOD(1, "Wood"),

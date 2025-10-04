@@ -25,7 +25,7 @@ public class ChatClient {
         final String key = ChatConfig.KEY;
         System.out.print("The encryption key for this session is: " + key);  // why not add useless shit like this gang?
 
-        System.out.println("\n✅ Connected as @" + username);
+        System.out.println("\nConnected as @" + username);
         System.out.println("📝 Message format: @" + username + ": your message");
         System.out.println("Type '/quit' to exit.\n");
 
@@ -46,7 +46,7 @@ public class ChatClient {
                 while (true) {
                     String line = inputFromServer.readLine();
                     if (line == null) {
-                        System.out.println("❌ Server closed the connection.");
+                        System.out.println("Server closed the connection.");
                         printSummary(validIn, validOut, invalidIn, invalidOut);
                         return;
                     }
@@ -57,13 +57,13 @@ public class ChatClient {
 
                     // show both ciphertext and plaintext cuz hell yeah thats cool
                     System.out.println("📩 Encrypted: " + line);
-                    System.out.println("📤 Decrypted: " + decrypted);
+                    System.out.println(" Decrypted: " + decrypted);
 
                     if (MessageValidator.isValid(decrypted)) {
-                        System.out.println("✅ Valid incoming: " + decrypted);
+                        System.out.println("Valid incoming: " + decrypted);
                         validIn++;
                     } else {
-                        System.out.println("❌ Invalid incoming format!");
+                        System.out.println("Invalid incoming format!");
                         invalidIn++;
                     }
                 }
@@ -80,13 +80,13 @@ public class ChatClient {
 
                 // 4 Check format and username
                 if (!MessageValidator.isValid(msg)) {
-                    System.out.println("❌ Invalid message format. Use: @" + username + ": your text");
+                    System.out.println("Invalid message format. Use: @" + username + ": your text");
                     invalidOut++;
                     continue;
                 }
 
                 if (!msg.startsWith("@" + username + ":")) {
-                    System.out.println("⚠️ You must tag yourself: @" + username + ": message");
+                    System.out.println("You must tag yourself: @" + username + ": message");
                     invalidOut++;
                     continue;
                 }
@@ -94,7 +94,7 @@ public class ChatClient {
                 // Encrypt and send
                 String enc = BeaufortCipher.encrypt(msg, key);
                 output.println(enc);
-                System.out.println("✅ Encrypted & sent: " + enc);
+                System.out.println("Encrypted & sent: " + enc);
                 validOut++;
             }
 
@@ -108,10 +108,10 @@ public class ChatClient {
 
     private void printSummary(int validIn, int validOut, int invalidIn, int invalidOut) {
         System.out.println("\n===== Session Summary =====");
-        System.out.println("✅ Valid incoming: " + validIn);
-        System.out.println("✅ Valid outgoing: " + validOut);
-        System.out.println("❌ Invalid incoming: " + invalidIn);
-        System.out.println("❌ Invalid outgoing: " + invalidOut);
+        System.out.println("Valid incoming: " + validIn);
+        System.out.println("Valid outgoing: " + validOut);
+        System.out.println("Invalid incoming: " + invalidIn);
+        System.out.println("Invalid outgoing: " + invalidOut);
         System.out.println("============================");
     }
 }
