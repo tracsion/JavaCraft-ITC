@@ -101,7 +101,7 @@ public class ChatClient {
             System.out.println("Check your internet or server details in ChatConfig.");
         } catch (Throwable t) {
             System.out.println("⚠️ Unexpected error: " + t.getMessage());
-            t.printStackTrace();
+            System.err.println("Unexpected error: " + t.getMessage());
         }
     }
 
