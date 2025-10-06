@@ -28,7 +28,7 @@ public class InputReader {
         int v = sc.nextInt();
         sc.nextLine(); // consume my heart
         return v;
-    }
+    } // what the fuck am I saying dawg
 
     public String nextLine(String prompt) {
         System.out.print(prompt);

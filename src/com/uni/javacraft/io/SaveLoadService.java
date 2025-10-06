@@ -18,8 +18,8 @@ public class SaveLoadService {
     public void loadInto(GameState into, String fileName) {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             GameState loaded = (GameState) in.readObject();
-            // Copy fields from loaded to into (simple swap is okay if you return loaded instead)
-            // Here we just return the loaded instance to the caller (see controller).
+            // Copy fields from loaded to into.
+            // Here we just return the loaded instance to the caller.
             throw new UnsupportedOperationException("Controller replaces state instance; see GameController.loadState().");
         } catch (UnsupportedOperationException uoe) {
             throw uoe;
