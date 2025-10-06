@@ -8,9 +8,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.IOException;
 
-// had some problems with the chat box because people were sending empty messages so i added a timeout ye thankgod cuz shit wasnt working properly
-// any fixes or problems you encounter send me a message in the groupchat gang
-
 public class ChatClient {
 
     public void start(InputReader in) {
@@ -19,31 +16,25 @@ public class ChatClient {
         String username = in.nextLine("").trim();
         if (username.isEmpty()) username = "player";
 
-        // Always use default key
         final String key = ChatConfig.KEY;
-        System.out.println("Using default encryption key.");
-
-        System.out.println("\nConnected as @" + username);
-        System.out.println("Message format: @" + username + ": your message");
+        System.out.println("🔐 Using shared key: " + key);
+        System.out.println("\n💬 Connected as @" + username);
+        System.out.println("📝 Type messages as: @" + username + ": your text");
         System.out.println("Type '/quit' to exit.\n");
 
         try (Socket socket = new Socket(ChatConfig.HOST, ChatConfig.PORT)) {
-            // If the server doesnt send '+' the prompt breaks
-            socket.setSoTimeout(2500); // milsecs
-
+            socket.setSoTimeout(2500); // timeout so we don’t block forever
             var inputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             var output = new PrintWriter(socket.getOutputStream(), true);
 
-            // Sends server password
+            // login
             output.println(ChatConfig.PASSWORD);
 
-            int validIn = 0, validOut = 0, invalidIn = 0, invalidOut = 0;
-
             while (true) {
-                // 1 Ping server
+                // ping
                 output.println("");
 
-                // 2 Read all server responses until '+' OR timeout
+                // read incoming
                 while (true) {
                     String line;
                     try {
@@ -51,77 +42,62 @@ public class ChatClient {
                     } catch (java.net.SocketTimeoutException timeout) {
                         break;
                     }
-
                     if (line == null) {
-                        System.out.println("Server closed the connection.");
-                        printSummary(validIn, validOut, invalidIn, invalidOut);
+                        System.out.println("❌ Server closed connection.");
                         return;
                     }
                     if (line.equals("+")) break;
 
-                    // Skip server notices iam cooking
-                    if (!line.isEmpty() && (line.charAt(0) == '*' || line.charAt(0) == '-' || line.endsWith(">>> "))) {
+                    // skip system notices
+                    if (line.startsWith("* ") || line.endsWith("connected") || line.endsWith("disconnected")) {
                         System.out.println(line);
                         continue;
                     }
 
-                    // Decrypt and validate chat payloads
-                    String decrypted = BeaufortCipher.decrypt(line, key);
-                    System.out.println("Encrypted: " + line);
-                    System.out.println("Decrypted: " + decrypted);
+                    // extract encrypted part
+                    String encryptedPart = line;
+                    int arrowIndex = line.indexOf(">>> ");
+                    if (arrowIndex != -1 && arrowIndex + 4 < line.length()) {
+                        encryptedPart = line.substring(arrowIndex + 4).trim();
+                    }
 
+                    // decrypt
+                    String decrypted = BeaufortCipher.decrypt(encryptedPart, key);
+
+                    // only show valid chat messages
                     if (MessageValidator.isValid(decrypted)) {
-                        System.out.println("Valid incoming: " + decrypted);
-                        validIn++;
-                    } else {
-                        System.out.println("Invalid incoming format!");
-                        invalidIn++;
+                        System.out.println("💬 " + decrypted);
                     }
                 }
 
-                // 3 Get user message
-                System.out.print("\nEnter message (@" + username + ": text or /quit): ");
-                String msg = in.nextLine("");
+                // user input
+                System.out.print("> ");
+                String msg = in.nextLine("").trim();
 
-                if ("/quit".equalsIgnoreCase(msg.trim())) {
-                    System.out.println("Quitting chat. Cya mate!");
-                    printSummary(validIn, validOut, invalidIn, invalidOut);
+                if (msg.equalsIgnoreCase("/quit")) {
+                    System.out.println("👋 Goodbye!");
                     return;
                 }
 
-                // 4 Validate format and selftsh
                 if (!MessageValidator.isValid(msg)) {
-                    System.out.println("Invalid message format. Use: @" + username + ": your text");
-                    invalidOut++;
-                    continue;
-                }
-                if (!msg.startsWith("@" + username + ":")) {
-                    System.out.println("You must tag yourself: @" + username + ": message");
-                    invalidOut++;
+                    System.out.println("⚠️ Invalid format. Use: @" + username + ": your message");
                     continue;
                 }
 
-                // 5 Encrypt and send pro
+                if (!msg.startsWith("@" + username + ":")) {
+                    System.out.println("⚠️ You must tag yourself with @" + username + ":");
+                    continue;
+                }
+
+                // encrypt + send
                 String enc = BeaufortCipher.encrypt(msg, key);
                 output.println(enc);
-                System.out.println("Encrypted & sent: " + enc);
-                validOut++;
             }
 
         } catch (IOException e) {
-            System.err.println("Could not connect to server: " + e.getMessage());
-            System.err.println("Check your ChatConfig host/port and network.");
+            System.err.println("❌ Connection error: " + e.getMessage());
         } catch (Throwable t) {
-            System.err.println("Unexpected error: " + t.getMessage());
+            System.err.println("❌ Unexpected error: " + t.getMessage());
         }
-    }
-
-    private void printSummary(int validIn, int validOut, int invalidIn, int invalidOut) {
-        System.out.println("\n===== Session Summary =====");
-        System.out.println("Valid incoming: " + validIn);
-        System.out.println("Valid outgoing: " + validOut);
-        System.out.println("Invalid incoming: " + invalidIn);
-        System.out.println("Invalid outgoing: " + invalidOut);
-        System.out.println("============================");
     }
 }
