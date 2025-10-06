@@ -19,5 +19,5 @@ public class World implements Serializable {
     public BlockType get(int x, int y) { return BlockType.fromId(grid[x][y]); }
     public void set(int x, int y, BlockType t) { grid[x][y] = t.id; }
 
-    public int[][] raw() { return grid; } // for serialization if needed
+    public int[][] raw() { return grid; } // for serialization if needed who cares tho
 }
