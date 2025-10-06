@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.io.IOException;
 
 // had some problems with the chat box because people were sending empty messages so i added a timeout ye thankgod cuz shit wasnt working properly
-
+// a
 public class ChatClient {
 
     public void start(InputReader in) {
