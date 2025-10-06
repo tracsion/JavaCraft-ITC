@@ -43,7 +43,7 @@ public class ChatClient {
                         break;
                     }
                     if (line == null) {
-                        System.out.println("❌ Server closed connection.");
+                        System.out.println("Server closed connection.");
                         return;
                     }
                     if (line.equals("+")) break;
@@ -80,12 +80,12 @@ public class ChatClient {
                 }
 
                 if (!MessageValidator.isValid(msg)) {
-                    System.out.println("⚠️ Invalid format. Use: @" + username + ": your message");
+                    System.out.println("Invalid format. Use: @" + username + ": your message");
                     continue;
                 }
 
                 if (!msg.startsWith("@" + username + ":")) {
-                    System.out.println("⚠️ You must tag yourself with @" + username + ":");
+                    System.out.println("You must tag yourself with @" + username + ":");
                     continue;
                 }
 
@@ -95,9 +95,9 @@ public class ChatClient {
             }
 
         } catch (IOException e) {
-            System.err.println("❌ Connection error: " + e.getMessage());
+            System.err.println("Connection error: " + e.getMessage());
         } catch (Throwable t) {
-            System.err.println("❌ Unexpected error: " + t.getMessage());
+            System.err.println("Unexpected error: " + t.getMessage());
         }
     }
 }
