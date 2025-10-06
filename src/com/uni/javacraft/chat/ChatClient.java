@@ -40,7 +40,7 @@ public class ChatClient {
                     try {
                         line = inputFromServer.readLine();
                     } catch (java.net.SocketTimeoutException timeout) {
-                        break; // no more lines right now
+                        break; // no more lines right now cuz fuck this
                     }
                     if (line == null) {
                         System.out.println("Server closed connection.");
