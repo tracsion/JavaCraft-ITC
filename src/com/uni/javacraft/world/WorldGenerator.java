@@ -26,11 +26,11 @@ public final class WorldGenerator {
         World world = new World(w, h);
         int stripe = h / 3;
         for (int y = 0; y < stripe; y++)
-            for (int x = 0; x < w; x++) world.set(x, y, BlockType.WOOD);      // red-ish
+            for (int x = 0; x < w; x++) world.set(x, y, BlockType.WOOD);      // redish
         for (int y = stripe; y < 2*stripe; y++)
-            for (int x = 0; x < w; x++) world.set(x, y, BlockType.IRON_ORE);  // white-ish
+            for (int x = 0; x < w; x++) world.set(x, y, BlockType.IRON_ORE);  // whiteish
         for (int y = 2*stripe; y < h; y++)
-            for (int x = 0; x < w; x++) world.set(x, y, BlockType.STONE);     // blue-ish
+            for (int x = 0; x < w; x++) world.set(x, y, BlockType.STONE);     // blueish
         return world;
     }
 }
