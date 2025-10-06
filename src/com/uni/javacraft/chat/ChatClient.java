@@ -17,30 +17,30 @@ public class ChatClient {
         if (username.isEmpty()) username = "player";
 
         final String key = ChatConfig.KEY;
-        System.out.println("🔐 Using shared key: " + key);
-        System.out.println("\n💬 Connected as @" + username);
-        System.out.println("📝 Type messages as: @" + username + ": your text");
+        System.out.println("Using shared key: " + key);
+        System.out.println("\nConnected as @" + username);
+        System.out.println("Message format: @" + username + ": your message");
         System.out.println("Type '/quit' to exit.\n");
 
         try (Socket socket = new Socket(ChatConfig.HOST, ChatConfig.PORT)) {
-            socket.setSoTimeout(2500); // timeout so we don’t block forever
+            socket.setSoTimeout(2500); // avoid blocking forever
             var inputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             var output = new PrintWriter(socket.getOutputStream(), true);
 
-            // login
+            // authenticate with server
             output.println(ChatConfig.PASSWORD);
 
             while (true) {
-                // ping
+                // ping to receive updates
                 output.println("");
 
-                // read incoming
+                // read incoming messages
                 while (true) {
                     String line;
                     try {
                         line = inputFromServer.readLine();
                     } catch (java.net.SocketTimeoutException timeout) {
-                        break;
+                        break; // no more lines right now
                     }
                     if (line == null) {
                         System.out.println("Server closed connection.");
@@ -48,48 +48,49 @@ public class ChatClient {
                     }
                     if (line.equals("+")) break;
 
-                    // skip system notices
+                    // show server notices
                     if (line.startsWith("* ") || line.endsWith("connected") || line.endsWith("disconnected")) {
                         System.out.println(line);
                         continue;
                     }
 
-                    // extract encrypted part
+                    // extract encrypted message part
                     String encryptedPart = line;
                     int arrowIndex = line.indexOf(">>> ");
                     if (arrowIndex != -1 && arrowIndex + 4 < line.length()) {
                         encryptedPart = line.substring(arrowIndex + 4).trim();
                     }
 
-                    // decrypt
+                    // decrypt only the message
                     String decrypted = BeaufortCipher.decrypt(encryptedPart, key);
 
-                    // only show valid chat messages
+                    // show only valid chat messages
                     if (MessageValidator.isValid(decrypted)) {
-                        System.out.println("💬 " + decrypted);
+                        System.out.println(decrypted);
                     }
                 }
 
-                // user input
+                // get user input
                 System.out.print("> ");
                 String msg = in.nextLine("").trim();
 
                 if (msg.equalsIgnoreCase("/quit")) {
-                    System.out.println("👋 Goodbye!");
+                    System.out.println("Exiting chat.");
                     return;
                 }
 
+                // validate before sending
                 if (!MessageValidator.isValid(msg)) {
                     System.out.println("Invalid format. Use: @" + username + ": your message");
                     continue;
                 }
 
                 if (!msg.startsWith("@" + username + ":")) {
-                    System.out.println("You must tag yourself with @" + username + ":");
+                    System.out.println("You must tag yourself as @" + username + ":");
                     continue;
                 }
 
-                // encrypt + send
+                // encrypt and send
                 String enc = BeaufortCipher.encrypt(msg, key);
                 output.println(enc);
             }
