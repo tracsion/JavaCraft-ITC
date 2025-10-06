@@ -38,14 +38,15 @@ public class GameController {
                 case "m": state.mine(); pause(); break;
 
                 case "p": {
-                    int id = in.nextInt("Enter block id (0–7) to place: ");
+                    int id = in.nextInt("Enter block id (0–10) to place: ");
                     state.place(id);
                     pause();
                     break;
                 }
 
                 case "c": {
-                    System.out.println("Crafting Recipes:\n1) 2 Wood -> Planks\n2) 1 Wood -> Stick\n3) 3 Iron Ore -> Ingot");
+                    System.out.println("Crafting Recipes:\n1) 2 Wood -> Planks\n2) 1 Wood -> Stick\n3) 3 Iron Ore -> Ingot" +
+                            "\n4) 2 Gold and 1 Diamond -> Gold Chain");
                     int recipe = in.nextInt("Recipe number: ");
                     state.craft(recipe);
                     pause();

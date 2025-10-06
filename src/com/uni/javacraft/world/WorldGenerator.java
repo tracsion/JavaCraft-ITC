@@ -15,6 +15,8 @@ public final class WorldGenerator {
                         : (r < 35) ? BlockType.LEAVES
                         : (r < 50) ? BlockType.STONE
                         : (r < 70) ? BlockType.IRON_ORE
+                        : (r < 80) ? BlockType.GOLD
+                        : (r < 85) ? BlockType.DIAMOND
                         : BlockType.AIR;
                 world.set(x, y, t);
             }

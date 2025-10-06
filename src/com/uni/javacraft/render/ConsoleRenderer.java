@@ -59,6 +59,8 @@ public class ConsoleRenderer {
         System.out.println(AnsiPalette.GREEN + "\u00A7\u00A7 - Leaves");
         System.out.println(AnsiPalette.BLUE  + "\u2593\u2593 - Stone");
         System.out.println(AnsiPalette.WHITE + "\u00B0\u00B0 - Iron ore");
+        System.out.println(AnsiPalette.YELLOW + "\u00D7\u00D7 - Gold");
+        System.out.println(AnsiPalette.CYAN + "\u06DE\u06DE - Diamond");
         System.out.println(AnsiPalette.BLUE  + "P - Player" + AnsiPalette.RESET);
     }
 
@@ -116,6 +118,9 @@ public class ConsoleRenderer {
             case PLANKS:    return AnsiPalette.BROWN  + "W";
             case STICK:     return AnsiPalette.BROWN  + "T";
             case IRON_INGOT:return AnsiPalette.YELLOW + "I";
+            case DIAMOND:   return AnsiPalette.CYAN   + "\u06DE";
+            case GOLD:      return AnsiPalette.YELLOW + "\u00D7";
+            case GOLDCHAIN: return AnsiPalette.YELLOW + "G";
             default:        return AnsiPalette.RESET  + "-";
         }
     }

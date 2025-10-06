@@ -56,12 +56,12 @@ public class GameState implements Serializable {
     }
 
     public void place(int id) {
-        if (id < 0 || id > 7) {
-            System.out.println("Invalid block number (0–7).");
+        if (id < 0 || id > 10) {
+            System.out.println("Invalid block number (0–10).");
             return;
         }
         BlockType t = BlockType.fromId(id);
-        if (id <= 4) {
+        if (id <= 6) {
             if (inv.contains(id)) {
                 inv.remove(id, 1);
                 world.set(player.x(), player.y(), t);
@@ -87,6 +87,8 @@ public class GameState implements Serializable {
             case LEAVES -> { System.out.println("You gather leaves."); inv.add(BlockType.LEAVES.id); }
             case STONE -> { System.out.println("You gather stones."); inv.add(BlockType.STONE.id); }
             case IRON_ORE -> { System.out.println("You mine iron ore."); inv.add(BlockType.IRON_ORE.id); }
+            case GOLD -> { System.out.println("You mine gold"); inv.add(BlockType.GOLD.id);}
+            case DIAMOND -> { System.out.println("You mine diamond"); inv.add(BlockType.DIAMOND.id);}
             default -> System.out.println("Nothing to interact with here.");
         }
     }
@@ -114,6 +116,14 @@ public class GameState implements Serializable {
                     System.out.println("Crafted Iron Ingot.");
                 } else System.out.println("Need 3 Iron Ore.");
             }
+            case 4 -> {
+                if((inv.contains(BlockType.GOLD.id, 2)) && inv.contains(BlockType.DIAMOND.id , 1)){
+                    inv.remove(BlockType.GOLD.id, 2);
+                    inv.remove(BlockType.DIAMOND.id, 1);
+                    crafted.add(BlockType.GOLDCHAIN);
+                    System.out.println("Crafted Gold Chain");
+                } else System.out.println("Need 2 Gold and 1 Diamond");
+            }
             default -> System.out.println("Invalid recipe number.");
         }
     }
@@ -135,7 +145,7 @@ public class GameState implements Serializable {
 
     private void fillSecretInventory() {
         inv.clear();
-        for (int id = 1; id <= 4; id++) {
+        for (int id = 1; id <= 6; id++) {
             for (int i = 0; i < Config.INVENTORY_SIZE; i++) inv.add(id);
         }
     }

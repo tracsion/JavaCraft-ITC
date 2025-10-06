@@ -8,9 +8,12 @@ public enum BlockType {
     LEAVES(2, "Leaves"),
     STONE(3, "Stone"),
     IRON_ORE(4, "Iron Ore"),
-    PLANKS(5, "Wooden Planks"),
-    STICK(6, "Stick"),
-    IRON_INGOT(7, "Iron Ingot");
+    GOLD(5, "Gold"),
+    DIAMOND(6, "Diamond"),
+    PLANKS(7, "Wooden Planks"),
+    STICK(8, "Stick"),
+    IRON_INGOT(9, "Iron Ingot"),
+    GOLDCHAIN(10, "Gold chain");
 
     public final int id;
     private final String display;
