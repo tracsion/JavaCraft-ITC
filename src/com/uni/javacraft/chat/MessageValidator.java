@@ -1,7 +1,7 @@
 package com.uni.javacraft.chat;
 
 
-// SO listen kids this is the message dfa validator and it works i made it myself with some help from very original sources but since chat gpt IS FUCKING DUMB i had to write this.
+// SO listen kids this is the message dfa validator and it works i made it myself I would never but since chat gpt IS FUCKING DUMB i had to write this shit..
 
 public final class MessageValidator {
 

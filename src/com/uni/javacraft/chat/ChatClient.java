@@ -9,7 +9,8 @@ import java.net.Socket;
 import java.io.IOException;
 
 // had some problems with the chat box because people were sending empty messages so i added a timeout ye thankgod cuz shit wasnt working properly
-// a
+// any fixes or problems you encounter send me a message in the groupchat gang
+
 public class ChatClient {
 
     public void start(InputReader in) {
@@ -27,7 +28,7 @@ public class ChatClient {
         System.out.println("Type '/quit' to exit.\n");
 
         try (Socket socket = new Socket(ChatConfig.HOST, ChatConfig.PORT)) {
-            // If the server doesnt send '+' we break prompt
+            // If the server doesnt send '+' the prompt breaks
             socket.setSoTimeout(2500); // milsecs
 
             var inputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -58,7 +59,7 @@ public class ChatClient {
                     }
                     if (line.equals("+")) break;
 
-                    // Skip server notices cooking
+                    // Skip server notices iam cooking
                     if (!line.isEmpty() && (line.charAt(0) == '*' || line.charAt(0) == '-' || line.endsWith(">>> "))) {
                         System.out.println(line);
                         continue;
