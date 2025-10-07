@@ -8,7 +8,7 @@ import java.util.*;
 // Hector, Jan, Theodor, Nikos
 
 // this is the entrypoint
-public class App {
+public class JavaCraft {
     public static void main(String[] args) {
         new GameController().run();
     }
@@ -49,7 +49,7 @@ final class BeaufortCipher {
     }
 }
 
-// the message validator was crazy to make ngl fuck this i would never do this way fuckass dfa
+// the message validator was weird and hard to make idk if this is the correct way
 
 final class MessageValidator {
     private MessageValidator() {}
@@ -181,7 +181,7 @@ final class Config {
     private Config() {}
     public static final int DEFAULT_W = 25;
     public static final int DEFAULT_H = 15;
-    public static final int INVENTORY_SIZE = 100;
+    public static final int INVENTORY_SIZE = 100; // after secret door inventory make it as big as you want
 }
 
 class GameController {
