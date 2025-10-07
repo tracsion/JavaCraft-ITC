@@ -113,7 +113,7 @@ class ChatClient {
             while (true) {
                 output.println(""); // ping server
 
-                // read incoming messages goat
+                // read incomsing messages goat
                 while (true) {
                     String line;
                     try {
@@ -557,9 +557,9 @@ final class AnsiPalette {
     public static final String YELLOW = "\u001B[33m";
     public static final String CYAN   = "\u001B[36m";
     public static final String RED    = "\u001B[31m";
-    public static final String PURPLE = "\u001B[35m";
+    public static final String PURPLE = "\u001B[35m"; // not used honestly i should remove this but iam scared maybe we will use them
     public static final String BLUE   = "\u001B[34m";
-    public static final String GRAY   = "\u001B[37m";
+    public static final String GRAY   = "\u001B[37m"; // not used honestly i should remove this but iam scared maybe we will use them
     public static final String WHITE  = "\u001B[97m";
     public static final String BROWN  = "\u001B[38;5;94m";
 }
@@ -698,7 +698,7 @@ enum BlockType {
     PLANKS(7, "Wooden Planks"),
     STICK(8, "Stick"),
     IRON_INGOT(9, "Iron Ingot"),
-    GOLDCHAIN(10, "Gold chain");
+    GOLDCHAIN(10, "Gold chain"); // how did u come up with this theodor golden chain bro???
 
     public final int id;
     private final String display;
