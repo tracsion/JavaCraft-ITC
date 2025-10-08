@@ -2,46 +2,64 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-// combined all of the files together everything is still the same.
-// original github link https://github.com/tracsion/JavaCraft-ITC
-// a lot of code has been optimized
-// Hector, Jan, Theodor, Nikos
+/*
+
+    Combined all of the files together everything is still the same.
+    Original github link https://github.com/tracsion/JavaCraft-ITC
+    We had the code seperated into sections originaly on our github project so the team can work more effectively on it.
+    A lot of original code has been optimized in the proccess of development.
+    You can see the commits on github.
+    Hopefuly we did a good job
+    Hector, Jan, Theodor, Nikos
+
+*/
 
 // this is the entrypoint
 public class JavaCraft {
     public static void main(String[] args) {
+        // start the gameloop
         new GameController().run();
     }
 }
 
-// chat section
+// chat section (configuration of the chat server connection)
 final class ChatConfig {
     private ChatConfig() {}
+    //chat server hostname and the port
     public static final String HOST = "chat.bcs1110.svc.leastfixedpoint.nl";
     public static final int PORT = 5999;
+    // shared encryption key for beaufort encryption
     public static final String KEY = "IAMAFRIENDLYPERSONRLLY"; // dont change this pls its rlly nice passkey
+    // password to auth with the server
     public static final String PASSWORD = "F4EF9A36-5FCD-4D27-8A0A-FC7C77D3DBB2";
 }
 
+// implementation of beaufort encryption
+// used to encrypt and decrypt messages
 final class BeaufortCipher {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // encryption alphabet
 
+    // encryption and decryption are symetric
     public static String encrypt(String text, String key) { return process(text, key); }
     public static String decrypt(String text, String key) { return process(text, key); }
 
+    // core cipher logic
     private static String process(String text, String key) {
         text = text.toUpperCase();
         key = key.toUpperCase();
         StringBuilder result = new StringBuilder();
         int keyIndex = 0;
         for (char c : text.toCharArray()) {
+            // only encrypt letters
             if (Character.isLetter(c)) {
                 int p = ALPHABET.indexOf(c);
                 int k = ALPHABET.indexOf(key.charAt(keyIndex));
+                // beaufort formula k - p = c
                 int cpos = (k - p + 26) % 26;
                 result.append(ALPHABET.charAt(cpos));
                 keyIndex = (keyIndex + 1) % key.length();
             } else {
+                // non letters will stay the same
                 result.append(c);
             }
         }
@@ -49,7 +67,8 @@ final class BeaufortCipher {
     }
 }
 
-// the message validator was weird and hard to make idk if this is the correct way
+// the message validator was weird and hard to make and idk if this is the correct way
+// it checks if a messages follows this format @username: text
 
 final class MessageValidator {
     private MessageValidator() {}
@@ -89,12 +108,13 @@ final class MessageValidator {
 }
 
 // this section has been optimized
+// chat client handles the server connection also sendying encrypted messages and read incoming messages
 class ChatClient {
     public void start(InputReader in) {
-        System.out.println("===== Chat Client =====");
+        System.out.println("------ Chat Client ------");
         System.out.print("Enter your username (without @): ");
         String username = in.nextLine("").trim();
-        if (username.isEmpty()) username = "player";
+        if (username.isEmpty()) username = "player"; // default name if user dont provide
 
         final String key = ChatConfig.KEY;
         System.out.println("Using shared key: " + key);
@@ -113,7 +133,7 @@ class ChatClient {
             while (true) {
                 output.println(""); // ping server
 
-                // read incomsing messages goat
+                // read incomsing messages from server
                 while (true) {
                     String line;
                     try {
@@ -132,14 +152,17 @@ class ChatClient {
                         continue;
                     }
 
+                    // extracts the encrypted message after >>>
                     String encryptedPart = line;
                     int arrowIndex = line.indexOf(">>> ");
                     if (arrowIndex != -1 && arrowIndex + 4 < line.length()) {
                         encryptedPart = line.substring(arrowIndex + 4).trim();
                     }
 
+                    // and decrypts the message
                     String decrypted = BeaufortCipher.decrypt(encryptedPart, key);
 
+                    // it also only shows valid messages
                     if (MessageValidator.isValid(decrypted)) {
                         System.out.println(decrypted);
                     }
@@ -154,16 +177,19 @@ class ChatClient {
                     return;
                 }
 
+                //validates the formal
                 if (!MessageValidator.isValid(msg)) {
                     System.out.println("Invalid format. Use: @" + username + ": your message");
                     continue;
                 }
 
+                // enforces the user to tag himself correctly
                 if (!msg.startsWith("@" + username + ":")) {
                     System.out.println("You must tag yourself as @" + username + ":");
                     continue;
                 }
 
+                // encrypts and sends
                 String enc = BeaufortCipher.encrypt(msg, key);
                 output.println(enc);
             }
