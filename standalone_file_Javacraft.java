@@ -36,33 +36,46 @@ final class ChatConfig {
 
 // implementation of beaufort encryption
 // used to encrypt and decrypt messages
+// found this version online and modified a bit
 final class BeaufortCipher {
-    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // encryption alphabet
+    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    // encryption and decryption are symetric
-    public static String encrypt(String text, String key) { return process(text, key); }
-    public static String decrypt(String text, String key) { return process(text, key); }
+    public static String encrypt(String text, String key) {
+        // encryption and decryption are same for Beaufort
+        return process(text, key);
+    }
 
-    // core cipher logic
+    public static String decrypt(String text, String key) {
+        return process(text, key);
+    }
+
+    // the actual cipher logic kinda hacky but works fine
     private static String process(String text, String key) {
-        text = text.toUpperCase();
-        key = key.toUpperCase();
         StringBuilder result = new StringBuilder();
         int keyIndex = 0;
-        for (char c : text.toCharArray()) {
-            // only encrypt letters
+
+        // normalize everything
+        text = text.toUpperCase();
+        key = key.toUpperCase();
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+
             if (Character.isLetter(c)) {
-                int p = ALPHABET.indexOf(c);
-                int k = ALPHABET.indexOf(key.charAt(keyIndex));
-                // beaufort formula k - p = c
-                int cpos = (k - p + 26) % 26;
-                result.append(ALPHABET.charAt(cpos));
+                int tPos = ALPHABET.indexOf(c);
+                int kPos = ALPHABET.indexOf(key.charAt(keyIndex));
+
+                // main formula: c = k - t (mod 26)
+                int newPos = (kPos - tPos + 26) % 26;
+
+                result.append(ALPHABET.charAt(newPos));
+
                 keyIndex = (keyIndex + 1) % key.length();
             } else {
-                // non letters will stay the same
-                result.append(c);
+                result.append(c); // dont touch punctuation or spaces
             }
         }
+
         return result.toString();
     }
 }
@@ -73,37 +86,31 @@ final class BeaufortCipher {
 final class MessageValidator {
     private MessageValidator() {}
 
-    public static boolean isValid(String s) {
-        if (s == null) return false;
-        int i = 0, n = s.length();
+    public static boolean isValid(String msg) {
+        if (msg == null || msg.isEmpty()) return false;
+        if (!msg.startsWith("@")) return false;
 
-        if (n == 0 || s.charAt(i) != '@') return false; // '@'
-        i++;
+        int colonIdx = msg.indexOf(":");
+        if (colonIdx == -1 || colonIdx < 2) return false;
 
-        if (i >= n || !isLetter(s.charAt(i))) return false; // first letter
-        i++;
-        while (i < n && isNameChar(s.charAt(i))) i++;
+        // must have space after colon
+        if (colonIdx + 1 >= msg.length() || msg.charAt(colonIdx + 1) != ' ') return false;
 
-        if (i >= n || s.charAt(i) != ':') return false; // ':'
-        i++;
-
-        if (i >= n || s.charAt(i) != ' ') return false; // space
-        i++;
-
-        if (i >= n) return false; // text must exist
-
-        for (; i < n; i++) { // printable
-            char c = s.charAt(i);
-            if (Character.isISOControl(c)) return false;
+        String namePart = msg.substring(1, colonIdx);
+        for (char c : namePart.toCharArray()) {
+            if (!isAllowedChar(c)) return false;
         }
+
+        String messagePart = msg.substring(colonIdx + 2);
+        for (char c : messagePart.toCharArray()) {
+            if (Character.isISOControl(c)) return false; // no weird control chars
+        }
+
         return true;
     }
 
-    private static boolean isLetter(char c) {
-        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
-    }
-    private static boolean isNameChar(char c) {
-        return isLetter(c) || (c >= '0' && c <= '9') || c == '_';
+    private static boolean isAllowedChar(char c) {
+        return Character.isLetterOrDigit(c) || c == '_';
     }
 }
 
